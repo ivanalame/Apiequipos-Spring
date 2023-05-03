@@ -1,16 +1,18 @@
 package net.azarquiel.infoliguero.model;
 
 import java.io.Serializable;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
 
  
 
 
 
-@jakarta.persistence.Entity 
+@Entity 
 public class Equipo implements Serializable {
 
     private static final long serialVersionUID = 1L;
-   @jakarta.persistence.Id
+   @Id
     private int id;
     private String nombre;
     private String imagen;
