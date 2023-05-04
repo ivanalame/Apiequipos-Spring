@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import net.azarquiel.infoliguero.model.Equipo;
+import net.azarquiel.infoliguero.model.Jugador;
 import net.azarquiel.infoliguero.repository.EquipoRepository;
 import net.azarquiel.infoliguero.repository.JugadorRepository;
 
@@ -54,10 +55,24 @@ public class Controller {
 
     // Get un equipo indicando el numero de equipo en la url
     @RequestMapping(value = "equipo/{id}", method = RequestMethod.GET, produces = "application/json")
-    public ResponseEntity<?> getEquipoById(@PathVariable(value = "equipo") int id) {
+    public ResponseEntity<?> getEquipoById(@PathVariable(value = "id") int id) {
    	 try {
    		 Equipo equipoResponse = equipoRepository.findById(id).orElse(null);
    		 return new ResponseEntity<>(equipoResponse, HttpStatus.OK);
+
+   	 } catch (Exception ex) {
+   		 return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+   	 }
+
+    }
+    
+    // Get un jugador indicando el numero de equipo en la url
+    
+    @RequestMapping(value = "jugador/{id}", method = RequestMethod.GET, produces = "application/json")
+    public ResponseEntity<?> getJugadorByIdequipo(@PathVariable(value = "id") int id) {
+   	 try {
+   		 Jugador jugadorResponse = jugadorRepository.findById(id).orElse(null);
+   		 return new ResponseEntity<>(jugadorResponse, HttpStatus.OK);
 
    	 } catch (Exception ex) {
    		 return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
