@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import net.azarquiel.infoliguero.model.Equipo;
 import net.azarquiel.infoliguero.repository.EquipoRepository;
+import net.azarquiel.infoliguero.repository.JugadorRepository;
 
 /*al poner RestController en vez de Controller,
   ya no tenemos que poner la anotacion ResponseBody*/
@@ -22,6 +23,7 @@ import net.azarquiel.infoliguero.repository.EquipoRepository;
 public class Controller {
     @Autowired
     EquipoRepository equipoRepository;
+    JugadorRepository jugadorRepository;
 
     // Welcome de nuestra api por ejemplo podríamos poner aquí
     @RequestMapping(value = "/", method = RequestMethod.GET, produces = "text/html")
@@ -31,7 +33,7 @@ public class Controller {
    	 cadena +="<tr style='background-color: #0000c0; color: #C0C0FF;'><th>Method</th><th>Url</th><th>Description</th></tr>";
    	 cadena +="<tr><td>get </td><td>/equipos</td><td>Lista de equipos</td></tr>";
    	 cadena +="<tr><td>get </td><td>/equipo/{id}</td><td>Equipo</td></tr>";
-   	 cadena +="<tr><td>post </td><td>/linea</td><td>Inserta linea</td></tr>";
+   	 cadena +="<tr><td>post </td><td>/equipo</td><td>Inserta un equipo</td></tr>";
    	 cadena +="<tr><td>delete </td><td>/linea/{linea}</td><td>Borra linea</td></tr>";
     	cadena +="</table>";
    	 return cadena;
