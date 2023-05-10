@@ -1,14 +1,12 @@
 package net.azarquiel.infoliguero.repository;
-
-import java.util.List;
-
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
-import net.azarquiel.infoliguero.model.Jugador;
+import net.azarquiel.infoliguero.model.Usuario;
 
 //con el extends CrudRepository ya podemos hacer todo los insert,delete,update...
 @Repository
-public interface JugadorRepository extends CrudRepository<Jugador, Integer>{
-	 List<Jugador> findByEquipoId(int id_equipo); 
+public interface UsuarioRepository extends CrudRepository<Usuario, Integer>{
+	 Usuario findByNickAndPass(String nick, String pass);
 }
+

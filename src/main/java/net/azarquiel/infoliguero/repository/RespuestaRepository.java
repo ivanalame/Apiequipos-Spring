@@ -6,9 +6,10 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
 import net.azarquiel.infoliguero.model.Jugador;
+import net.azarquiel.infoliguero.model.Respuesta;
 
 //con el extends CrudRepository ya podemos hacer todo los insert,delete,update...
 @Repository
-public interface JugadorRepository extends CrudRepository<Jugador, Integer>{
-	 List<Jugador> findByEquipoId(int id_equipo); 
+public interface RespuestaRepository extends CrudRepository<Respuesta, Integer>{
+	 List<Respuesta> findByPreguntaId(int id_pregunta); 
 }
