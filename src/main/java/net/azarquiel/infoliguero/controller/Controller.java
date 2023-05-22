@@ -15,12 +15,16 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import net.azarquiel.infoliguero.model.Equipo;
+import net.azarquiel.infoliguero.model.Equipop;
 import net.azarquiel.infoliguero.model.Jugador;
+import net.azarquiel.infoliguero.model.Jugadorp;
 import net.azarquiel.infoliguero.model.Pregunta;
 import net.azarquiel.infoliguero.model.Respuesta;
 import net.azarquiel.infoliguero.model.Usuario;
 import net.azarquiel.infoliguero.repository.EquipoRepository;
+import net.azarquiel.infoliguero.repository.EquipopRepository;
 import net.azarquiel.infoliguero.repository.JugadorRepository;
+import net.azarquiel.infoliguero.repository.JugadorpRepository;
 import net.azarquiel.infoliguero.repository.PreguntaRepository;
 import net.azarquiel.infoliguero.repository.RespuestaRepository;
 import net.azarquiel.infoliguero.repository.UsuarioRepository;
@@ -39,30 +43,39 @@ public class Controller {
     private final UsuarioRepository usuarioRepository;
     private final PreguntaRepository preguntaRepository;
     private final RespuestaRepository respuestaRepository;
-    
-    @Autowired
-    public Controller(EquipoRepository equipoRepository, JugadorRepository jugadorRepository,
+    private final EquipopRepository equipopRepository;
+    private final JugadorpRepository jugadorpRepository;
+
+
+	public Controller(EquipoRepository equipoRepository, JugadorRepository jugadorRepository,
 			UsuarioRepository usuarioRepository, PreguntaRepository preguntaRepository,
-			RespuestaRepository respuestaRepository) {
+			RespuestaRepository respuestaRepository, EquipopRepository equipopRepository,
+			JugadorpRepository jugadorpRepository) {
 		super();
 		this.equipoRepository = equipoRepository;
 		this.jugadorRepository = jugadorRepository;
 		this.usuarioRepository = usuarioRepository;
 		this.preguntaRepository = preguntaRepository;
 		this.respuestaRepository = respuestaRepository;
+		this.equipopRepository = equipopRepository;
+		this.jugadorpRepository = jugadorpRepository;
 	}
-    
+
+
 
 	// Welcome de nuestra api por ejemplo podríamos poner aquí
     @RequestMapping(value = "/", method = RequestMethod.GET, produces = "text/html")
     public String get() {
-   	 String cadena = "<h1 style='text-align: center; background-color: #0000c0; color: #C0C0FF;'>Welcome to Infoliguero Api with SpringBoot - IvanJuarez</h1>";
-   	 cadena +="<table border='1' style='width: 40%;margin: 0 auto; background-color: #C0C0FF; color:#0000c0;'>";
-   	 cadena +="<tr style='background-color: #0000c0; color: #C0C0FF;'><th>Method</th><th>Url</th><th>Description</th></tr>";
+   	 String cadena = "<h1 style='text-align: center; background-color: #572364; color: #ffe914 ;'>Bienvenido a  Infoliguero Api with SpringBoot - IvanJuarez</h1>";
+   	 cadena +="<table border='1' style='width: 40%;margin: 0 auto; background-color: #572364; color:#ffe914;'>";
+   	 cadena +="<tr style='background-color: #572364; color: #ffe914;'><th>Method</th><th>Url</th><th>Description</th></tr>";
    	 cadena +="<tr><td>get </td><td>/equipos</td><td>Lista de equipos</td></tr>";
+   	 cadena +="<tr><td>get </td><td>/equiposp</td><td>Lista de equipos de la Premier</td></tr>";
    	 cadena +="<tr><td>get </td><td>/equipo/{id}</td><td>Equipo</td></tr>";
+   	cadena +="<tr><td>get </td><td>/equipop/{id}</td><td>Equipo Premier</td></tr>";
    	 cadena +="<tr><td>post </td><td>/equipo</td><td>Inserta un equipo</td></tr>";
    	 cadena +="<tr><td>get </td><td>/jugador/{id_equipo}</td><td>sacar lista  de jugadores por id de equipo</td></tr>";
+   	cadena +="<tr><td>get </td><td>/jugadorp/{id_equipo}</td><td>sacar lista  de jugadores por id de equipo Premier</td></tr>";
    	 cadena +="<tr><td>get </td><td>/usuario</td><td>sacar usuario by nick and pass</td></tr>";
    	 cadena +="<tr><td>get </td><td>/pregunta/{id}</td><td>sacar pregunta by id</td></tr>";
    	 cadena +="<tr><td>get </td><td>/respuesta/{id_pregunta}</td><td>sacar respuestas by id_pregunta</td></tr>";
@@ -99,6 +112,21 @@ public class Controller {
    	 }
 
     }
+    
+ // Get un equipo de la premier indicando el numero de equipo en la url
+    @RequestMapping(value = "equipop/{id}", method = RequestMethod.GET, produces = "application/json")
+    public ResponseEntity<?> getEquipopremierAndPlayersById(@PathVariable(value = "id") int id) {
+   	 try {
+   	  // Find the team with the given ID
+         Equipop equipoResponse =  equipopRepository.findById(id).orElse(null);
+
+   		 return new ResponseEntity<>(equipoResponse, HttpStatus.OK);
+
+   	 } catch (Exception ex) {
+   		 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+   	 }
+
+    }
    
     // Get lista jugadores indicando el numero de equipo en la url
     
@@ -110,6 +138,25 @@ public class Controller {
             List<Jugador> jugadores = jugadorRepository.findByEquipoId(id_equipo);
 
             return new ResponseEntity<>(jugadores, HttpStatus.OK);
+
+        } catch (Exception ex) {
+        	
+        	
+        	ex.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+    
+ // Get lista jugadores indicando el numero de equipo PREMIER en la url
+    
+    @RequestMapping(value = "jugadorp/{id}", method = RequestMethod.GET, produces = "application/json")
+    public ResponseEntity<List<Jugadorp>> getJugadoresPremierByIdequipo(@PathVariable(value = "id") int id_equipo) {
+        try {
+            // Find all players that are associated with the given team ID
+        	System.out.println(id_equipo);
+            List<Jugadorp> jugadoresp = jugadorpRepository.findByEquipoId(id_equipo);
+
+            return new ResponseEntity<>(jugadoresp, HttpStatus.OK);
 
         } catch (Exception ex) {
         	
@@ -166,6 +213,19 @@ public class Controller {
 
    	 } catch (Exception ex) {
    		 
+   		 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+   	 }
+
+    }
+    
+ // Get lista con todos los equipos Premier
+    @RequestMapping(value = "equiposp", method = RequestMethod.GET, produces = "application/json")
+    public ResponseEntity<?> getEquiposPremier() {
+   	 try {
+   		 Iterable<Equipop> equiposp = equipopRepository.findAll();
+   		 return new ResponseEntity<>(equiposp, HttpStatus.OK);
+
+   	 } catch (Exception ex) {
    		 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
    	 }
 
