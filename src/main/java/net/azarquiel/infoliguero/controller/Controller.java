@@ -15,15 +15,27 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import net.azarquiel.infoliguero.model.Equipo;
+import net.azarquiel.infoliguero.model.Equipobu;
+import net.azarquiel.infoliguero.model.Equipofr;
+import net.azarquiel.infoliguero.model.Equipoit;
 import net.azarquiel.infoliguero.model.Equipop;
 import net.azarquiel.infoliguero.model.Jugador;
+import net.azarquiel.infoliguero.model.Jugadorbu;
+import net.azarquiel.infoliguero.model.Jugadorfr;
+import net.azarquiel.infoliguero.model.Jugadorit;
 import net.azarquiel.infoliguero.model.Jugadorp;
 import net.azarquiel.infoliguero.model.Pregunta;
 import net.azarquiel.infoliguero.model.Respuesta;
 import net.azarquiel.infoliguero.model.Usuario;
 import net.azarquiel.infoliguero.repository.EquipoRepository;
+import net.azarquiel.infoliguero.repository.EquipobuRepository;
+import net.azarquiel.infoliguero.repository.EquipofrRepository;
+import net.azarquiel.infoliguero.repository.EquipoitRepository;
 import net.azarquiel.infoliguero.repository.EquipopRepository;
 import net.azarquiel.infoliguero.repository.JugadorRepository;
+import net.azarquiel.infoliguero.repository.JugadorbuRepository;
+import net.azarquiel.infoliguero.repository.JugadorfrRepository;
+import net.azarquiel.infoliguero.repository.JugadoritRepository;
 import net.azarquiel.infoliguero.repository.JugadorpRepository;
 import net.azarquiel.infoliguero.repository.PreguntaRepository;
 import net.azarquiel.infoliguero.repository.RespuestaRepository;
@@ -45,12 +57,22 @@ public class Controller {
     private final RespuestaRepository respuestaRepository;
     private final EquipopRepository equipopRepository;
     private final JugadorpRepository jugadorpRepository;
+    private final EquipoitRepository equipoitRepository;
+    private final JugadoritRepository jugadoritRepository;
+    private final EquipobuRepository equipobuRepository;
+    private final JugadorbuRepository jugadorbuRepository;
+    private final EquipofrRepository equipofrRepository;
+    private final JugadorfrRepository jugadorfrRepository;
+
 
 
 	public Controller(EquipoRepository equipoRepository, JugadorRepository jugadorRepository,
 			UsuarioRepository usuarioRepository, PreguntaRepository preguntaRepository,
 			RespuestaRepository respuestaRepository, EquipopRepository equipopRepository,
-			JugadorpRepository jugadorpRepository) {
+			JugadorpRepository jugadorpRepository, EquipoitRepository equipoitRepository,
+			JugadoritRepository jugadoritRepository, EquipobuRepository equipobuRepository,
+			JugadorbuRepository jugadorbuRepository, EquipofrRepository equipofrRepository,
+			JugadorfrRepository jugadorfrRepository) {
 		super();
 		this.equipoRepository = equipoRepository;
 		this.jugadorRepository = jugadorRepository;
@@ -59,6 +81,12 @@ public class Controller {
 		this.respuestaRepository = respuestaRepository;
 		this.equipopRepository = equipopRepository;
 		this.jugadorpRepository = jugadorpRepository;
+		this.equipoitRepository = equipoitRepository;
+		this.jugadoritRepository = jugadoritRepository;
+		this.equipobuRepository = equipobuRepository;
+		this.jugadorbuRepository = jugadorbuRepository;
+		this.equipofrRepository = equipofrRepository;
+		this.jugadorfrRepository = jugadorfrRepository;
 	}
 
 
@@ -71,11 +99,20 @@ public class Controller {
    	 cadena +="<tr style='background-color: #572364; color: #ffe914;'><th>Method</th><th>Url</th><th>Description</th></tr>";
    	 cadena +="<tr><td>get </td><td>/equipos</td><td>Lista de equipos</td></tr>";
    	 cadena +="<tr><td>get </td><td>/equiposp</td><td>Lista de equipos de la Premier</td></tr>";
+   	 cadena +="<tr><td>get </td><td>/equiposit</td><td>Lista de equipos de la Serie A (liga italiana)</td></tr>";
+   	 cadena +="<tr><td>get </td><td>/equiposbu</td><td>Lista de equipos de la Bundesliga (liga alemana)</td></tr>";
+   	 cadena +="<tr><td>get </td><td>/equiposfr</td><td>Lista de equipos de la Ligue1 (liga francesa)</td></tr>";
    	 cadena +="<tr><td>get </td><td>/equipo/{id}</td><td>Equipo</td></tr>";
    	cadena +="<tr><td>get </td><td>/equipop/{id}</td><td>Equipo Premier</td></tr>";
+   	cadena +="<tr><td>get </td><td>/equipoit/{id}</td><td>Equipo Serie A</td></tr>";
+   	cadena +="<tr><td>get </td><td>/equipobu/{id}</td><td>Equipo Bundesliga</td></tr>";
+   	cadena +="<tr><td>get </td><td>/equipofr/{id}</td><td>Equipo Ligue1</td></tr>";
    	 cadena +="<tr><td>post </td><td>/equipo</td><td>Inserta un equipo</td></tr>";
    	 cadena +="<tr><td>get </td><td>/jugador/{id_equipo}</td><td>sacar lista  de jugadores por id de equipo</td></tr>";
    	cadena +="<tr><td>get </td><td>/jugadorp/{id_equipo}</td><td>sacar lista  de jugadores por id de equipo Premier</td></tr>";
+   	cadena +="<tr><td>get </td><td>/jugadorit/{id_equipo}</td><td>sacar lista  de jugadores por id de equipo Serie A</td></tr>";
+   	cadena +="<tr><td>get </td><td>/jugadorbu/{id_equipo}</td><td>sacar lista  de jugadores por id de equipo Bundesliga</td></tr>";
+   	cadena +="<tr><td>get </td><td>/jugadorfr/{id_equipo}</td><td>sacar lista  de jugadores por id de equipo Ligue 1</td></tr>";
    	 cadena +="<tr><td>get </td><td>/usuario</td><td>sacar usuario by nick and pass</td></tr>";
    	 cadena +="<tr><td>get </td><td>/pregunta/{id}</td><td>sacar pregunta by id</td></tr>";
    	 cadena +="<tr><td>get </td><td>/respuesta/{id_pregunta}</td><td>sacar respuestas by id_pregunta</td></tr>";
@@ -85,7 +122,7 @@ public class Controller {
 
     
 
-	// Get lista con todos los equipos
+	// Get lista con todos los equipos españa
     @RequestMapping(value = "equipos", method = RequestMethod.GET, produces = "application/json")
     public ResponseEntity<?> getEquipos() {
    	 try {
@@ -98,7 +135,7 @@ public class Controller {
 
     }
 
-    // Get un equipo indicando el numero de equipo en la url
+    // Get un equipo indicando el numero de equipo españa en la url
     @RequestMapping(value = "equipo/{id}", method = RequestMethod.GET, produces = "application/json")
     public ResponseEntity<?> getEquipoAndPlayersById(@PathVariable(value = "id") int id) {
    	 try {
@@ -127,6 +164,53 @@ public class Controller {
    	 }
 
     }
+   
+    
+ // Get un equipo de la Serie A  indicando el numero de equipo en la url
+    @RequestMapping(value = "equipoit/{id}", method = RequestMethod.GET, produces = "application/json")
+    public ResponseEntity<?> getEquipoItaliaAndPlayersById(@PathVariable(value = "id") int id) {
+   	 try {
+   	  // Find the team with the given ID
+         Equipoit equipoResponse =  equipoitRepository.findById(id).orElse(null);
+
+   		 return new ResponseEntity<>(equipoResponse, HttpStatus.OK);
+
+   	 } catch (Exception ex) {
+   		 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+   	 }
+
+    }
+    
+ // Get un equipo de la Bundesliga  indicando el numero de equipo en la url
+    @RequestMapping(value = "equipobu/{id}", method = RequestMethod.GET, produces = "application/json")
+    public ResponseEntity<?> getEquipoBundesligaAndPlayersById(@PathVariable(value = "id") int id) {
+   	 try {
+   	  // Find the team with the given ID
+         Equipobu equipoResponse =  equipobuRepository.findById(id).orElse(null);
+
+   		 return new ResponseEntity<>(equipoResponse, HttpStatus.OK);
+
+   	 } catch (Exception ex) {
+   		 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+   	 }
+
+    }
+    
+ // Get un equipo de la Ligue1  indicando el numero de equipo en la url
+    @RequestMapping(value = "equipofr/{id}", method = RequestMethod.GET, produces = "application/json")
+    public ResponseEntity<?> getEquipoFranciaAndPlayersById(@PathVariable(value = "id") int id) {
+   	 try {
+   	  // Find the team with the given ID
+         Equipofr equipoResponse =  equipofrRepository.findById(id).orElse(null);
+
+   		 return new ResponseEntity<>(equipoResponse, HttpStatus.OK);
+
+   	 } catch (Exception ex) {
+   		 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+   	 }
+
+    }
+   
    
     // Get lista jugadores indicando el numero de equipo en la url
     
@@ -157,6 +241,63 @@ public class Controller {
             List<Jugadorp> jugadoresp = jugadorpRepository.findByEquipoId(id_equipo);
 
             return new ResponseEntity<>(jugadoresp, HttpStatus.OK);
+
+        } catch (Exception ex) {
+        	
+        	
+        	ex.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+    
+// Get lista jugadores indicando el numero de equipo SERIE A  en la url
+    
+    @RequestMapping(value = "jugadorit/{id}", method = RequestMethod.GET, produces = "application/json")
+    public ResponseEntity<List<Jugadorit>> getJugadoresItaliaByIdequipo(@PathVariable(value = "id") int id_equipo) {
+        try {
+            // Find all players that are associated with the given team ID
+        	System.out.println(id_equipo);
+            List<Jugadorit> jugadoresit = jugadoritRepository.findByEquipoId(id_equipo);
+
+            return new ResponseEntity<>(jugadoresit, HttpStatus.OK);
+
+        } catch (Exception ex) {
+        	
+        	
+        	ex.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+    
+// Get lista jugadores indicando el numero de equipo BUNDESLIGA   en la url
+    
+    @RequestMapping(value = "jugadorbu/{id}", method = RequestMethod.GET, produces = "application/json")
+    public ResponseEntity<List<Jugadorbu>> getJugadoresBundesligaByIdequipo(@PathVariable(value = "id") int id_equipo) {
+        try {
+            // Find all players that are associated with the given team ID
+        	System.out.println(id_equipo);
+            List<Jugadorbu> jugadoresbu = jugadorbuRepository.findByEquipoId(id_equipo);
+
+            return new ResponseEntity<>(jugadoresbu, HttpStatus.OK);
+
+        } catch (Exception ex) {
+        	
+        	
+        	ex.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+    
+// Get lista jugadores indicando el numero de equipo LIGUE 1   en la url
+    
+    @RequestMapping(value = "jugadorfr/{id}", method = RequestMethod.GET, produces = "application/json")
+    public ResponseEntity<List<Jugadorfr>> getJugadoresFranciaByIdequipo(@PathVariable(value = "id") int id_equipo) {
+        try {
+            // Find all players that are associated with the given team ID
+        	System.out.println(id_equipo);
+            List<Jugadorfr> jugadoresfr = jugadorfrRepository.findByEquipoId(id_equipo);
+
+            return new ResponseEntity<>(jugadoresfr, HttpStatus.OK);
 
         } catch (Exception ex) {
         	
@@ -224,6 +365,45 @@ public class Controller {
    	 try {
    		 Iterable<Equipop> equiposp = equipopRepository.findAll();
    		 return new ResponseEntity<>(equiposp, HttpStatus.OK);
+
+   	 } catch (Exception ex) {
+   		 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+   	 }
+
+    }
+    
+ // Get lista con todos los equipos Serie A 
+    @RequestMapping(value = "equiposit", method = RequestMethod.GET, produces = "application/json")
+    public ResponseEntity<?> getEquiposItalia() {
+   	 try {
+   		 Iterable<Equipoit> equiposit = equipoitRepository.findAll();
+   		 return new ResponseEntity<>(equiposit, HttpStatus.OK);
+
+   	 } catch (Exception ex) {
+   		 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+   	 }
+
+    }
+    
+ // Get lista con todos los equipos Bundesliga
+    @RequestMapping(value = "equiposbu", method = RequestMethod.GET, produces = "application/json")
+    public ResponseEntity<?> getEquiposBundesliga() {
+   	 try {
+   		 Iterable<Equipobu> equiposbu = equipobuRepository.findAll();
+   		 return new ResponseEntity<>(equiposbu, HttpStatus.OK);
+
+   	 } catch (Exception ex) {
+   		 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+   	 }
+
+    }
+    
+    // Get lista con todos los equipos Ligue 1 
+    @RequestMapping(value = "equiposfr", method = RequestMethod.GET, produces = "application/json")
+    public ResponseEntity<?> getEquiposFrancia() {
+   	 try {
+   		 Iterable<Equipofr> equiposfr = equipofrRepository.findAll();
+   		 return new ResponseEntity<>(equiposfr, HttpStatus.OK);
 
    	 } catch (Exception ex) {
    		 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
