@@ -23,7 +23,7 @@ public class Jugadorp implements Serializable {
     private String pais;
     private String foto;
    
-    //PREGUNTAR A PACO
+   
     @ManyToOne
     @JoinColumn(name = "id_equipo")
     private Equipo equipo;

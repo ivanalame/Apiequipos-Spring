@@ -25,7 +25,9 @@ import net.azarquiel.infoliguero.model.Jugadorfr;
 import net.azarquiel.infoliguero.model.Jugadorit;
 import net.azarquiel.infoliguero.model.Jugadorp;
 import net.azarquiel.infoliguero.model.Pregunta;
+import net.azarquiel.infoliguero.model.Preguntap;
 import net.azarquiel.infoliguero.model.Respuesta;
+import net.azarquiel.infoliguero.model.Respuestap;
 import net.azarquiel.infoliguero.model.Usuario;
 import net.azarquiel.infoliguero.repository.EquipoRepository;
 import net.azarquiel.infoliguero.repository.EquipobuRepository;
@@ -38,7 +40,9 @@ import net.azarquiel.infoliguero.repository.JugadorfrRepository;
 import net.azarquiel.infoliguero.repository.JugadoritRepository;
 import net.azarquiel.infoliguero.repository.JugadorpRepository;
 import net.azarquiel.infoliguero.repository.PreguntaRepository;
+import net.azarquiel.infoliguero.repository.PreguntapRepository;
 import net.azarquiel.infoliguero.repository.RespuestaRepository;
+import net.azarquiel.infoliguero.repository.RespuestapRepository;
 import net.azarquiel.infoliguero.repository.UsuarioRepository;
 
 
@@ -63,6 +67,10 @@ public class Controller {
     private final JugadorbuRepository jugadorbuRepository;
     private final EquipofrRepository equipofrRepository;
     private final JugadorfrRepository jugadorfrRepository;
+    private final PreguntapRepository preguntapRepository;
+    private final RespuestapRepository respuestapRepository;
+    
+
 
 
 
@@ -72,7 +80,8 @@ public class Controller {
 			JugadorpRepository jugadorpRepository, EquipoitRepository equipoitRepository,
 			JugadoritRepository jugadoritRepository, EquipobuRepository equipobuRepository,
 			JugadorbuRepository jugadorbuRepository, EquipofrRepository equipofrRepository,
-			JugadorfrRepository jugadorfrRepository) {
+			JugadorfrRepository jugadorfrRepository, PreguntapRepository preguntapRepository,
+			RespuestapRepository respuestapRepository) {
 		super();
 		this.equipoRepository = equipoRepository;
 		this.jugadorRepository = jugadorRepository;
@@ -87,6 +96,8 @@ public class Controller {
 		this.jugadorbuRepository = jugadorbuRepository;
 		this.equipofrRepository = equipofrRepository;
 		this.jugadorfrRepository = jugadorfrRepository;
+		this.preguntapRepository = preguntapRepository;
+		this.respuestapRepository = respuestapRepository;
 	}
 
 
@@ -116,6 +127,8 @@ public class Controller {
    	 cadena +="<tr><td>get </td><td>/usuario</td><td>sacar usuario by nick and pass</td></tr>";
    	 cadena +="<tr><td>get </td><td>/pregunta/{id}</td><td>sacar pregunta by id</td></tr>";
    	 cadena +="<tr><td>get </td><td>/respuesta/{id_pregunta}</td><td>sacar respuestas by id_pregunta</td></tr>";
+   	 cadena +="<tr><td>get </td><td>/preguntap/{id}</td><td>sacar pregunta de la Premier by id</td></tr>";
+   	 cadena +="<tr><td>get </td><td>/respuestap/{id_pregunta}</td><td>sacar respuestas Premier by id_pregunta</td></tr>";
     	cadena +="</table>";
    	 return cadena;
     }
@@ -325,6 +338,25 @@ public class Controller {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
+    
+// Get lista respuestas PREMIER indicando el numero de pregunta en la url
+    
+    @RequestMapping(value = "respuestap/{id}", method = RequestMethod.GET, produces = "application/json")
+    public ResponseEntity<List<Respuestap>> getRespuestasPremierByIdpregunta(@PathVariable(value = "id") int id_pregunta) {
+        try {
+            // Find all players that are associated with the given team ID
+        	System.out.println(id_pregunta);
+            List<Respuestap> respuestasp = respuestapRepository.findByPreguntaId(id_pregunta);
+
+            return new ResponseEntity<>(respuestasp, HttpStatus.OK);
+
+        } catch (Exception ex) {
+        	
+        	
+        	ex.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
    
   // Get usuario by nick and pass 
     @RequestMapping(value = "usuario", method = RequestMethod.GET, produces = "application/json")
@@ -349,6 +381,22 @@ public class Controller {
    	 try {
    	  // Find the team with the given ID
          Pregunta preguntaResponse = preguntaRepository.findById(id).orElse(null);
+
+   		 return new ResponseEntity<>(preguntaResponse, HttpStatus.OK);
+
+   	 } catch (Exception ex) {
+   		 
+   		 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+   	 }
+
+    }
+    
+ // Get una pregunta PREMIER indicando el numero de pregunta en la url
+    @RequestMapping(value = "preguntap/{id}", method = RequestMethod.GET, produces = "application/json")
+    public ResponseEntity<?> getPreguntaPremierById(@PathVariable(value = "id") int id) {
+   	 try {
+   	  // Find the team with the given ID
+         Preguntap preguntaResponse = preguntapRepository.findById(id).orElse(null);
 
    		 return new ResponseEntity<>(preguntaResponse, HttpStatus.OK);
 
